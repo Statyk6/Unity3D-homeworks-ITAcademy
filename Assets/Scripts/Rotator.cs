@@ -7,23 +7,26 @@ public class Rotator : MonoBehaviour
     public float speed = 10.0f; // Скорость движения
     public float rotationSpeed = 100.0f; // Скорость вращения
 
-    private float journeyLength; // Длина пути
+    private float journeyLength;
+    private float currentTime;
 
     void Start()
     {
-        // Вычисляем длину пути между двумя точками
         journeyLength = Vector3.Distance(pointC1.position, pointC2.position);
+        currentTime = 0; // Инициализируем свой таймер
     }
 
     void Update()
     {
-        // Вычисляем долю пути с учётом скорости и времени
-        float fractionOfJourney = Mathf.PingPong(Time.time * speed / journeyLength, 1);
+        currentTime += Time.deltaTime; // Увеличиваем свой таймер каждый кадр
 
-        // Перемещаем объект между точками
+        // Вычисляем долю пути на основе текущего времени
+        float fractionOfJourney = Mathf.PingPong(currentTime * speed / journeyLength, 1);
+
+        // Перемещение объекта
         transform.position = Vector3.Lerp(pointC1.position, pointC2.position, fractionOfJourney);
 
-        // Вращаем объект вокруг оси Y с учётом времени, прошедшего с предыдущего кадра
+        // Вращение объекта вокруг оси Y
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
     }
 }
