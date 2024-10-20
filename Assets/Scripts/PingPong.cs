@@ -6,19 +6,23 @@ public class PingPong : MonoBehaviour
     public Transform pointA2; // Вторая точка
     public float speed = 10.0f; // Скорость движения
 
-    private float journeyLength;
-    private float startTime;
+    private float journeyLength; // Длина пути
 
     void Start()
     {
+        // Вычисляем длину пути между двумя точками
         journeyLength = Vector3.Distance(pointA1.position, pointA2.position);
-        startTime = Time.time; // Запоминаем начальное время
     }
 
     void Update()
     {
-        float distCovered = (Time.time - startTime) * speed; // Пройденное расстояние
-        float fractionOfJourney = distCovered / journeyLength; // Доля пути
-        transform.position = Vector3.Lerp(pointA1.position, pointA2.position, Mathf.PingPong(fractionOfJourney, 1)); // Линейная интерполяция
+        // Вычисляем пройденное расстояние, умножая скорость на время, прошедшее с предыдущего кадра
+        float distCovered = speed * Time.deltaTime;
+
+        // Используем PingPong для создания колебательного движения между точками
+        float fractionOfJourney = Mathf.PingPong(Time.time * speed / journeyLength, 1);
+
+        // Линейная интерполяция между двумя точками в зависимости от доли пройденного пути
+        transform.position = Vector3.Lerp(pointA1.position, pointA2.position, fractionOfJourney);
     }
 }
